@@ -9,7 +9,7 @@ from aiogram.exceptions import TelegramBadRequest
 import aiohttp
 from aiogram.types import ContentType
 
-from aiogram.utils.executor import start_webhook
+from aiogram.webhook.aiohttp import setup_aiohttp_webhook
 
 TOKEN = "7807538479:AAE1SzsrjS0t8JcqXai7UUhs4qFOE7Yp8WI"
 CHANNEL_ID = -1002340148619

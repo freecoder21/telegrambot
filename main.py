@@ -7,7 +7,7 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton  # To cre
 from aiogram.types import Update
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import Update
-from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler
 from aiohttp import web
 from aiogram.types import ContentType
 
@@ -250,6 +250,10 @@ async def main():
 
 # Run the main function if this file is executed
 # Run the Flask app
+app = web.Application()
+SimpleRequestHandler(dispatcher=dp, bot=bot).register(app, path="/webhook")
+app.on_startup.append(on_startup)
+app.on_shutdown.append(on_shutdown)
 if __name__ == '__main__':
     # Run the app using aiohttp
     app.on_startup.append(on_startup)

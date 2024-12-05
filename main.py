@@ -9,7 +9,6 @@ from aiogram.exceptions import TelegramBadRequest
 import aiohttp
 from aiogram.types import ContentType
 
-from aiogram.contrib.middlewares.logging import LoggingMiddleware
 
 TOKEN = "7807538479:AAE1SzsrjS0t8JcqXai7UUhs4qFOE7Yp8WI"
 CHANNEL_ID = -1002340148619

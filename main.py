@@ -251,7 +251,8 @@ async def main():
 # Run the main function if this file is executed
 # Run the Flask app
 app = web.Application()
-SimpleRequestHandler(dispatcher=dp, bot=bot).register(app, path="/webhook")
+app.router.add_post(WEBHOOK_PATH, on_start)
+
 app.on_startup.append(on_startup)
 app.on_shutdown.append(on_shutdown)
 if __name__ == '__main__':

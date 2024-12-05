@@ -1,10 +1,14 @@
+import os
+import logging
+from flask import Flask, request
 import asyncio
 from aiogram import Bot, Dispatcher, Router  # Importing necessary modules for the Telegram bot
 from aiogram.filters import CommandStart  # To handle the "/start" command
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton  # To create messages and buttons
 from aiogram.exceptions import TelegramBadRequest
 import aiohttp
-
+from aiogram.types import ParseMode
+from aiogram.utils.executor import start_webhook
 
 TOKEN = "7807538479:AAE1SzsrjS0t8JcqXai7UUhs4qFOE7Yp8WI"
 CHANNEL_ID = -1002340148619
@@ -12,7 +16,24 @@ CHANNEL_INVITE_LINK = "https://t.me/+tKtZNXcN96E1N2Q0"
 # Initializing the bot and setting up the dispatcher (the manager of events and updates)
 bot = Bot(TOKEN)
 dp = Dispatcher()
+
 router = Router()
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+
+# Initialize Flask app and bot
+app = Flask(__name__)
+@app.route('/webhook', methods=['POST'])
+async def webhook():
+    json_str = await request.get_data(as_text=True)
+    update = types.Update.parse_raw(json_str)
+    await dp.process_update(update)
+    return 'OK', 200
+async def on_startup(dp):
+    logging.info("Bot started")
+    webhook_url = "https://api.render.com/deploy/srv-ct8jgsm8ii6s73cbfiag?key=FnzL9gWlVo4"
+    await bot.set_webhook(webhook_url)
+
 
 # A dictionary to store user data. Each user will have their own entry with specific details.
 user_data = {}
@@ -224,5 +245,7 @@ async def main():
     await dp.start_polling(bot)  # Start listening for updates
 
 # Run the main function if this file is executed
-if __name__ == "__main__":
-    asyncio.run(main())
+# Run the Flask app
+if __name__ == '__main__':
+    from aiogram import executor
+    start_webhook(dispatcher=dp, webhook_path="/webhook", on_startup=on_sta

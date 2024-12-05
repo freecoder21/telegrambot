@@ -7,7 +7,8 @@ from aiogram.filters import CommandStart  # To handle the "/start" command
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton  # To create messages and buttons
 from aiogram.exceptions import TelegramBadRequest
 import aiohttp
-from aiogram.types import ParseMode
+from aiogram.types import ContentType
+
 from aiogram.utils.executor import start_webhook
 
 TOKEN = "7807538479:AAE1SzsrjS0t8JcqXai7UUhs4qFOE7Yp8WI"

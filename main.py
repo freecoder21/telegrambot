@@ -1,12 +1,14 @@
 import os
 import logging
-from flask import Flask, request
 import asyncio
 from aiogram import Bot, Dispatcher, Router  # Importing necessary modules for the Telegram bot
 from aiogram.filters import CommandStart  # To handle the "/start" command
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton  # To create messages and buttons
+from aiogram.types import Update
 from aiogram.exceptions import TelegramBadRequest
-import aiohttp
+from aiogram.types import Update
+from aiogram.utils.executor import start_webhook
+from aiohttp import web
 from aiogram.types import ContentType
 
 
@@ -14,26 +16,28 @@ TOKEN = "7807538479:AAE1SzsrjS0t8JcqXai7UUhs4qFOE7Yp8WI"
 CHANNEL_ID = -1002340148619
 CHANNEL_INVITE_LINK = "https://t.me/+tKtZNXcN96E1N2Q0"
 # Initializing the bot and setting up the dispatcher (the manager of events and updates)
-bot = Bot(TOKEN)
-dp = Dispatcher()
-
-router = Router()
 # Set up logging
 logging.basicConfig(level=logging.INFO)
+bot = Bot(TOKEN)
+dp = Dispatcher()
+router = Router()
 
-# Initialize Flask app and bot
-app = Flask(__name__)
-@app.route('/webhook', methods=['POST'])
-async def webhook():
-    json_str = await request.get_data(as_text=True)
-    update = types.Update.parse_raw(json_str)
-    await dp.process_update(update)
-    return 'OK', 200
-async def on_startup(dp):
-    logging.info("Bot started")
-    webhook_url = "https://api.render.com/deploy/srv-ct8jgsm8ii6s73cbfiag?key=FnzL9gWlVo4"
-    await bot.set_webhook(webhook_url)
 
+WEBHOOK_HOST = 'https://api.render.com/deploy/srv-ct8jgsm8ii6s73cbfiag?key=FnzL9gWlVo4'  # Replace with your Render domain or IP address
+WEBHOOK_PATH = f'/webhook/{TOKEN}'
+WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
+async def on_start(request):
+    data = await request.json()  # Get the update from the webhook request
+    update = Update(**data)  # Convert it into an Update object
+    await dp.process_update(update)  # Process the update using aiogram
+    return web.Response()
+async def on_startup(app):
+    # Set the webhook when the app starts
+    await bot.set_webhook(WEBHOOK_URL)
+
+async def on_shutdown(app):
+    # Clean up when the app shuts down
+    await bot.delete_webhook()
 
 # A dictionary to store user data. Each user will have their own entry with specific details.
 user_data = {}
@@ -247,6 +251,7 @@ async def main():
 # Run the main function if this file is executed
 # Run the Flask app
 if __name__ == '__main__':
-    from aiogram import executor
-    start_webhook(dispatcher=dp, webhook_path="/webhook", on_startup=on_startup)
-
+    # Run the app using aiohttp
+    app.on_startup.append(on_startup)
+    app.on_shutdown.append(on_shutdown)
+    web.run_app(app, host='0.0.0.0', port=8080)

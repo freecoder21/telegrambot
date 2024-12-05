@@ -248,5 +248,5 @@ async def main():
 # Run the Flask app
 if __name__ == '__main__':
     from aiogram import executor
-   start_webhook(dispatcher=dp, webhook_path="/webhook", on_startup=on_startup)
+    start_webhook(dispatcher=dp, webhook_path="/webhook", on_startup=on_startup)
 

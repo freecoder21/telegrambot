@@ -7,7 +7,7 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton  # To cre
 from aiogram.types import Update
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import Update
-from aiogram.utils.executor import start_webhook
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 from aiohttp import web
 from aiogram.types import ContentType
 

@@ -273,7 +273,7 @@ async def main():
 # Run the main function if this file is executed
 # Run the Flask app
 app = web.Application()
-app.router.add_post(WEBHOOK_PATH, on_start)
+app.router.add_post(WEBHOOK_PATH, on_startup)
 
 app.on_startup.append(on_startup)
 app.on_shutdown.append(on_shutdown)

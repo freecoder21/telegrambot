@@ -23,7 +23,7 @@ dp = Dispatcher()
 router = Router()
 
 
-WEBHOOK_HOST = 'https://api.render.com/deploy/srv-ct8jgsm8ii6s73cbfiag?key=FnzL9gWlVo4'  # Replace with your Render domain or IP address
+WEBHOOK_HOST = 'https://telegrambot-1-50pl.onrender.com'  # Replace with your Render domain or IP address
 WEBHOOK_PATH = f'/webhook/{TOKEN}'
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 async def on_start(request):
